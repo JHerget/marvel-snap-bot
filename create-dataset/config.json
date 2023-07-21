@@ -1,0 +1,7 @@
+{
+  "card_json_url": "https://snapjson.untapped.gg/v2/latest/en/cards.json",
+  "location_json_url": "https://snapjson.untapped.gg/v2/latest/en/locations.json",
+  "card_img_url": "https://snapjson.untapped.gg/art/render/framebreak/common/256",
+  "location_img_url": "https://snapjson.untapped.gg/art/ext",
+  "images_dir": "./images"
+}
