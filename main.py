@@ -1,5 +1,7 @@
 from os import path, mkdir, listdir
 from urllib.parse import quote
+from PIL import Image
+from io import BytesIO
 import requests as client
 import json
 
@@ -40,8 +42,8 @@ for index in range(len(cards_json)):  # Using range so we know which index we're
             # Create the directory for it.
             mkdir(card_dir)
             # Save the image.
-            with open(f"{card_dir}/{card_name}.jpg", "wb") as file:
-                file.write(card_img.content)
+            webp_image = Image.open(BytesIO(card_img.content)).convert("RGBA")
+            webp_image.save(f"{card_dir}/{card_name}.png", "png")
 
         # e.g. (204/301 200) Downloading card Valkyrie.webp...
         print(f"({index + 1}/{len(cards_json)} {card_img.status_code}) Downloading card {card_name}...")
@@ -59,13 +61,13 @@ for index in range(len(cards_json)):  # Using range so we know which index we're
         variant_name = f"{card_name}_{variant_number:02d}"
 
         # If we downloaded the base card (e.g Valkyrie.webp) and we haven't already downloaded the variant.
-        if path.isdir(card_dir) and f"{variant_name}.jpg" not in listdir(card_dir):
+        if path.isdir(card_dir) and f"{variant_name}.png" not in listdir(card_dir):
             # Fetch the variant.
             variant_img = client.get(f"{card_img_url}/{variant_name}.webp")
             if variant_img.ok:
                 # Save the variant in the base card's folder.
-                with open(f"{card_dir}/{variant_name}.jpg", "wb") as file:
-                    file.write(variant_img.content)
+                webp_image = Image.open(BytesIO(variant_img.content)).convert("RGBA")
+                webp_image.save(f"{card_dir}/{variant_name}.png", "png")
 
             success = variant_img.ok
 
@@ -94,8 +96,8 @@ for index in range(len(locations_json)):  # Using range so we know which index w
             # Create the directory for it.
             mkdir(location_dir)
             # Save the image.
-            with open(f"{location_dir}/{location_file_name}.jpg", "wb") as file:
-                file.write(location_img.content)
+            webp_image = Image.open(BytesIO(location_img.content)).convert("RGBA")
+            webp_image.save(f"{location_dir}/{location_file_name}.png", "png")
 
         # e.g. (47/136 200) Downloading location Sinister%20London.webp...
         print(f"({index + 1}/{len(locations_json)} {location_img.status_code}) Downloading location {location_name}...")
