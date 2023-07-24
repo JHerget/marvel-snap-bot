@@ -68,7 +68,7 @@ location_val = location_dataset.skip(LOCATION_TRAIN)
 tf.random.set_seed(42)
 
 # TinyVGG architecture.
-model_1 = tf.keras.Sequential(layers=[
+model = tf.keras.Sequential(layers=[
     layers.Conv2D(filters=10, kernel_size=3, activation="relu", input_shape=(256, 256, 3)),
     layers.Conv2D(filters=10, kernel_size=3, activation="relu"),
     layers.MaxPool2D(),
@@ -79,18 +79,18 @@ model_1 = tf.keras.Sequential(layers=[
     layers.Dense(127, activation="softmax")
 ])
 
-model_1.compile(
+model.compile(
     optimizer=optimizers.Adam(),
     loss=losses.SparseCategoricalCrossentropy(),
     metrics=["accuracy"]
 )
 
-history_1 = model_1.fit(
+history = model.fit(
     x=location_train,
     epochs=50,
     validation_data=location_val
 )
 
-evaluate_model(model_1, location_val)
-graph_model_metrics(history_1)
-model_1.save("model_1")
+evaluate_model(model, location_val)
+graph_model_metrics(history)
+model.save("location-classification-model")

@@ -12,7 +12,6 @@ with open("config.json", "r") as file:
 
     base_dir = config["dataset_dir"]
     cards_dir = f"{base_dir}/cards"
-    locations_dir = f"{base_dir}/locations"
 
 # Grab a random image from the directory and show it. Can be useful for getting familiar with the data.
 def display_random_image(directory):
@@ -69,7 +68,7 @@ card_val = card_dataset.skip(CARD_TRAIN)
 tf.random.set_seed(42)
 
 # TinyVGG architecture.
-model_1 = tf.keras.Sequential(layers=[
+model = tf.keras.Sequential(layers=[
     layers.Conv2D(filters=10, kernel_size=3, activation="relu", input_shape=(256, 256, 3)),
     layers.Conv2D(filters=10, kernel_size=3, activation="relu"),
     layers.MaxPool2D(),
@@ -80,18 +79,18 @@ model_1 = tf.keras.Sequential(layers=[
     layers.Dense(282, activation="softmax")
 ])
 
-model_1.compile(
+model.compile(
     optimizer=optimizers.Adam(),
     loss=losses.SparseCategoricalCrossentropy(),
     metrics=["accuracy"]
 )
 
-history_1 = model_1.fit(
+history = model.fit(
     x=card_train,
     epochs=500,
     validation_data=card_val
 )
 
-evaluate_model(model_1, card_val)
-graph_model_metrics(history_1)
-model_1.save("model_1")
+evaluate_model(model, card_val)
+graph_model_metrics(history)
+model.save("card-classification-model")
