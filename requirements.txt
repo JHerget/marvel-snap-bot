@@ -3,3 +3,4 @@ urllib3==1.26.6
 tensorflow==2.13.0
 matplotlib==3.7.1
 opencv-python==4.8.0.74
+yt-dlp @ https://github.com/yt-dlp/yt-dlp/archive/master.tar.gz
