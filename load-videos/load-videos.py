@@ -1,4 +1,7 @@
 from youtube import YoutubeVideo
+from crop import Crop
+from simpletk import Window
+from PIL import Image, ImageTk
 import json
 import cv2
 
@@ -19,25 +22,27 @@ video.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
 success, frame = video.read()
 print(success)
 
-height, width, channels = frame.shape
-row_start = int(float(config["hoogland_layout"]["locations"]["row_start"])*height)
-row_end = int(float(config["hoogland_layout"]["locations"]["row_end"])*height)
-col_start = int(float(config["hoogland_layout"]["locations"]["col_start"])*width)
-col_end = int(float(config["hoogland_layout"]["locations"]["col_end"])*width)
-locations = frame[row_start:row_end, col_start:col_end]
+width, height = (300, 300)
+root = Window(width=width, height=height+50, title="Marvel Snap")
+canvas = root.add_canvas(width=width, height=height, row=1, col=1, row_span=50, col_span=50)
+next_button = root.add_button(width=10, height=1, text="Next Image", row=51, col=25)
 
-cv2.imshow("frame", locations)
-cv2.waitKey(5000)
+cropped_frame = Crop(frame=frame, layout=config["hoogland_layout"]).get_all()[0]
+image = ImageTk.PhotoImage(image=Image.fromarray(cropped_frame))
+canvas.create_image(width//2, height//2, image=image)
 
-# image = cv2.imread("test.png")
-# height, width, channels = image.shape
+root.mainloop()
+
+# url = YoutubeVideo(url).getbest()["url"]
+# video = cv2.VideoCapture(url)
+# fps = video.get(cv2.CAP_PROP_FPS)
+# start_frame = int((60*start_min + start_sec)*fps)
 #
-# row_start = int(float(config["hoogland_layout"]["locations"]["row_start"])*height)
-# row_end = int(float(config["hoogland_layout"]["locations"]["row_end"])*height)
-# col_start = int(float(config["hoogland_layout"]["locations"]["col_start"])*width)
-# col_end = int(float(config["hoogland_layout"]["locations"]["col_end"])*width)
-# locations = image[row_start:row_end, col_start:col_end]
+# video.set(cv2.CAP_PROP_POS_FRAMES, start_frame)
+# success, frame = video.read()
+# print(success)
 #
-# cv2.imshow("testimage", locations)
-# cv2.waitKey(10000)
-# print(image.shape)
+# cropped_frame = Crop(frame=frame, layout=config["hoogland_layout"])
+# cropped_frame.display_locations()
+# cropped_frame.display_opponent_cards()
+# cropped_frame.display_player_cards()
